@@ -47,3 +47,17 @@ corresponds to
 | A   | 0   | B   | F   |
 
 (Chip-8 Keypad)
+
+## Build
+
+### Dependencies
+
+- Rust & Cargo
+- SDL2
+
+### Build Instructions
+
+```bash
+cargo build --release # Build
+./target/release/chipate # Run
+```
