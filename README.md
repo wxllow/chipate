@@ -19,14 +19,14 @@ A rusty Chip-8 emulator that ate (but left a lot of crumbs).
 
 ### Functions
 
-Esc - Quit
-F3 - Reset
-F4 - Load ROM (Coming Soon)
-F5 - Toggle UI (Coming Soon)
-F8 - Pause
-F12 - Debug mode
--/_ - Speed down 1 (-60Hz)
-+/= - Speed up 1 (+60Hz)
+- Esc - Quit
+- F3 - Reset
+- F4 - Load ROM (Coming Soon)
+- F5 - Toggle UI (Coming Soon)
+- F8 - Pause
+- F12 - Debug mode
+- -/_ - Speed down 1 (-60Hz)
+- +/= - Speed up 1 (+60Hz)
 
 ### Keypad
 
