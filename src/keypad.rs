@@ -6,8 +6,11 @@ use sdl2::keyboard::{KeyboardState, Keycode, Scancode};
 use sdl2::EventPump;
 use sdl2::Sdl;
 
+use crate::keymaps::Keymap;
+
 pub struct Keypad {
     pump: EventPump,
+    keymap: Vec<Keymap>,
 }
 
 pub enum State {
@@ -23,9 +26,10 @@ pub enum State {
 }
 
 impl Keypad {
-    pub fn new(sdl_context: &Sdl) -> Self {
+    pub fn new(sdl_context: &Sdl, keymap: Vec<Keymap>) -> Self {
         Keypad {
             pump: sdl_context.event_pump().unwrap(),
+            keymap,
         }
     }
 
@@ -64,25 +68,13 @@ impl Keypad {
         }
 
         let key_state = KeyboardState::new(&mut self.pump);
-        key[0x1] = key_state.is_scancode_pressed(Scancode::Num1) as u8;
-        key[0x2] = key_state.is_scancode_pressed(Scancode::Num2) as u8;
-        key[0x3] = key_state.is_scancode_pressed(Scancode::Num3) as u8;
-        key[0xC] = key_state.is_scancode_pressed(Scancode::Num4) as u8;
 
-        key[0x4] = key_state.is_scancode_pressed(Scancode::Q) as u8;
-        key[0x5] = key_state.is_scancode_pressed(Scancode::W) as u8;
-        key[0x6] = key_state.is_scancode_pressed(Scancode::E) as u8;
-        key[0xD] = key_state.is_scancode_pressed(Scancode::R) as u8;
-
-        key[0x7] = key_state.is_scancode_pressed(Scancode::A) as u8;
-        key[0x8] = key_state.is_scancode_pressed(Scancode::S) as u8;
-        key[0x9] = key_state.is_scancode_pressed(Scancode::D) as u8;
-        key[0xE] = key_state.is_scancode_pressed(Scancode::F) as u8;
-
-        key[0xA] = key_state.is_scancode_pressed(Scancode::Z) as u8;
-        key[0x0] = key_state.is_scancode_pressed(Scancode::X) as u8;
-        key[0xB] = key_state.is_scancode_pressed(Scancode::C) as u8;
-        key[0xF] = key_state.is_scancode_pressed(Scancode::V) as u8;
+        for keymap in <Vec<Keymap> as Clone>::clone(&self.keymap).into_iter() {
+            key[keymap.key as usize] = key_state.is_scancode_pressed(
+                Scancode::from_i32(keymap.scancode)
+                    .expect(format!("Invalid scancode: {}", keymap.scancode).as_str()),
+            ) as u8;
+        }
 
         State::Continue
     }

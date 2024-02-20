@@ -11,3 +11,9 @@ clap = { version = "4.4.18", features = ["derive"] }
 lazy_static = "1.4.0"
 rand = "0.8.5"
 sdl2 = { version = "0.36.0", features = ["ttf"] }
+serde_json = { version = "1.0.114", optional = true }
+serde = { version = "1.0.144", features = ["derive"], optional = true }
+
+[features]
+default = ["keymaps"]
+keymaps = ["dep:serde_json", "dep:serde"]

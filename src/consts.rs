@@ -1,4 +1,7 @@
 // Constants for chip8 emu
+use lazy_static::lazy_static;
+
+use crate::keymaps::Keymap;
 
 pub const WIDTH: usize = 64;
 pub const HEIGHT: usize = 32;
@@ -38,3 +41,88 @@ pub const FONT: [u8; 240] = [
     0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, // E
     0xFF, 0xFF, 0xC0, 0xC0, 0xFF, 0xFF, 0xC0, 0xC0, 0xC0, 0xC0, // F
 ];
+
+lazy_static! {
+    pub static ref STANDARD_KEYMAP: [Keymap; 16] = [
+        Keymap {
+            scancode: 30,
+            key: 0x01,
+            comments: Some("Num1 ->  1".to_string()),
+        },
+        Keymap {
+            scancode: 31,
+            key: 0x02,
+            comments: Some("Num2 ->  2".to_string()),
+        },
+        Keymap {
+            scancode: 32,
+            key: 0x03,
+            comments: Some("Num3 ->  3".to_string()),
+        },
+        Keymap {
+            scancode: 33,
+            key: 0x0C,
+            comments: Some("Num4 -> C".to_string()),
+        },
+        Keymap {
+            scancode: 20,
+            key: 0x04,
+            comments: Some("Q ->  3".to_string()),
+        },
+        Keymap {
+            scancode: 26,
+            key: 0x05,
+            comments: Some("W ->  5".to_string()),
+        },
+        Keymap {
+            scancode: 8,
+            key: 0x06,
+            comments: Some("E ->  6".to_string()),
+        },
+        Keymap {
+            scancode: 21,
+            key: 0x0D,
+            comments: Some("R -> D".to_string()),
+        },
+        Keymap {
+            scancode: 4,
+            key: 0x07,
+            comments: Some("A ->  7".to_string()),
+        },
+        Keymap {
+            scancode: 22,
+            key: 0x08,
+            comments: Some("S ->  8".to_string()),
+        },
+        Keymap {
+            scancode: 7,
+            key: 0x09,
+            comments: Some("D ->  9".to_string()),
+        },
+        Keymap {
+            scancode: 9,
+            key: 0x0E,
+            comments: Some("F -> E".to_string()),
+        },
+        Keymap {
+            scancode: 29,
+            key: 0x0A,
+            comments: Some("Z -> A".to_string()),
+        },
+        Keymap {
+            scancode: 27,
+            key: 0x00,
+            comments: Some("X ->  0".to_string()),
+        },
+        Keymap {
+            scancode: 6,
+            key: 0x0B,
+            comments: Some("C -> B".to_string()),
+        },
+        Keymap {
+            scancode: 25,
+            key: 0x0F,
+            comments: Some("V -> F".to_string()),
+        },
+    ];
+}

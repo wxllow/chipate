@@ -86,6 +86,12 @@ impl Cpu {
 
         let nnn: u16 = (self.opcode & 0x0FFF) as u16; // addr 12-bit value
 
+        if self.debug {
+            println!(
+                "Opcode: 0x{:X} Vx: 0x{:X} Vy: 0x{:X} N: 0x{:X} NNN: 0x{:X}",
+                self.opcode, vx, vy, nn, nnn
+            );
+        }
         match self.opcode & 0xF000 {
             0x0000 => match self.opcode & 0x00FF {
                 // 00E0 Clear screen
@@ -317,7 +323,7 @@ impl Cpu {
 
                 // FX29 Set I = location of sprite for digit Vx
                 0x0029 => {
-                    self.ireg = (self.vreg[vx] * 0x5) as u16;
+                    self.ireg = (self.vreg[vx] as u16).wrapping_mul(0x5);
                     self.pc += 2;
                 }
 

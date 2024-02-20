@@ -1,10 +1,13 @@
+use std::path::Path;
+
 use clap::Parser;
 
-use crate::{cpu::Cpu, keypad::Keypad, sound::Sound};
+use crate::{consts::STANDARD_KEYMAP, cpu::Cpu, keypad::Keypad, sound::Sound};
 
 mod consts;
 mod cpu;
 mod display;
+mod keymaps;
 mod keypad;
 mod sound;
 
@@ -21,6 +24,10 @@ struct Args {
         help = "CPU speed (speed * 60 = Hz/TPS)"
     )]
     speed: u8,
+
+    #[cfg(feature = "keymaps")]
+    #[arg(long, help = "Keymap Filename")]
+    keymap: Option<String>,
 
     #[arg(short, long, default_value_t = false, help = "Enable fullscreen mode")]
     fullscreen: bool,
@@ -51,7 +58,18 @@ fn main() {
 
     let sdl_context = sdl2::init().expect("Failed to init SDL");
     let timer = sdl_context.timer().expect("SDL context timer failed");
-    let mut keypad = Keypad::new(&sdl_context);
+
+    #[cfg(feature = "keymaps")]
+    let keymap = if let Some(keymap) = args.keymap {
+        keymaps::parse_keymap_file(Path::new(&keymap))
+    } else {
+        STANDARD_KEYMAP.to_vec()
+    };
+
+    #[cfg(not(feature = "keymaps"))]
+    let keymap = STANDARD_KEYMAP.to_vec();
+
+    let mut keypad = Keypad::new(&sdl_context, keymap);
     let mut sound = Sound::new(&sdl_context);
     let mut display = display::Display::new(
         &sdl_context,
@@ -73,7 +91,7 @@ fn main() {
     const INTERVAL: u32 = 1_000 / 60;
     let mut before = timer.ticks();
     let mut last_second = timer.ticks();
-    let mut fps = 0u16;
+    let mut fps: u16 = 0;
 
     'run: loop {
         // Input handling
@@ -116,7 +134,7 @@ fn main() {
         let dt = now - before;
 
         if dt < INTERVAL {
-            // timer.delay(INTERVAL - dt);
+            timer.delay(INTERVAL - dt);
             continue;
         }
 
@@ -127,8 +145,8 @@ fn main() {
             println!(
                 "FPS: {} | {}Hz ({}) | {}",
                 fps,
-                cpu.speed,
                 (cpu.speed as u32 * 60),
+                cpu.speed,
                 if paused { "Paused" } else { "Running" },
             );
             last_second = now;
